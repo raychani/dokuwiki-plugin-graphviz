@@ -119,7 +119,8 @@ class syntax_plugin_graphviz extends DokuWiki_Syntax_Plugin {
      * Return path to the rendered image on our local system
      */
     function _imgfile($data){
-        $cache  = $this->_cachename($data,'png');
+        $ext = $this->getConf('extension');
+        $cache  = $this->_cachename($data,$ext);
 
         // create the file if needed
         if(!file_exists($cache)){
@@ -135,7 +136,7 @@ class syntax_plugin_graphviz extends DokuWiki_Syntax_Plugin {
 
         // resized version
         if($data['width']){
-            $cache = media_resize_image($cache,'png',$data['width'],$data['height']);
+            $cache = media_resize_image($cache,$ext,$data['width'],$data['height']);
         }
 
         // something went wrong, we're missing the file
@@ -180,9 +181,9 @@ class syntax_plugin_graphviz extends DokuWiki_Syntax_Plugin {
             }
             return false;
         }
-
+	
         $cmd  = $this->getConf('path');
-        $cmd .= ' -Tpng';
+        $cmd .= ' -T'.$this->getConf('extension');
         $cmd .= ' -K'.$data['layout'];
         $cmd .= ' -o'.escapeshellarg($out); //output
         $cmd .= ' '.escapeshellarg($in); //input

@@ -14,7 +14,12 @@ $plugin = plugin_load('syntax','graphviz');
 $cache  = $plugin->_imgfile($data);
 if(!$cache) _fail();
 
-header('Content-Type: image/png;');
+$ext = $plugin->getConf('extension');
+if(strcmp($ext, 'svg')==0) {
+    $ext .= '+xml';
+}
+
+header('Content-Type: image/'.$ext.';');
 header('Expires: '.gmdate("D, d M Y H:i:s", time()+max($conf['cachetime'], 3600)).' GMT');
 header('Cache-Control: public, proxy-revalidate, no-transform, max-age='.max($conf['cachetime'], 3600));
 header('Pragma: public');
